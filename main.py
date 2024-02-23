@@ -3,7 +3,6 @@ clr=0
 method = 0
 def myapp(page: flt.Page):
     page.theme_mode = flt.ThemeMode.LIGHT
-    page.window_full_screen=True
     page.scroll="always"
     global method,method1,data1,cl1
     method1 = flt.RadioGroup(content=flt.Column([
