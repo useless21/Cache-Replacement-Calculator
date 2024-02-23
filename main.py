@@ -1,11 +1,14 @@
 import flet as flt
+from win32api import GetSystemMetrics
 clr=0
 method = 0
-
 def myapp(page: flt.Page):
     page.theme_mode = flt.ThemeMode.LIGHT
     page.scroll="always"
-    page.window_fullscreen=True
+    page.window_left = 0
+    page.window_top = 0
+    page.window_height=GetSystemMetrics(1)-30
+    page.window_width = GetSystemMetrics(0)+30
     global method,method1,data1,cl1
     method1 = flt.RadioGroup(content=flt.Column([
         flt.Radio(value=1, label='LRU (Least Recently Used)'),
@@ -26,7 +29,7 @@ def myapp(page: flt.Page):
         label="Cache Line",
         value="",
         input_filter=flt.NumbersOnlyInputFilter(),
-        helper_text = "Enter an integer to determine number of cache line",
+        helper_text = "Enter an integer less than 10 to determine number of cache line",
     )
 
     labels = flt.TextField(
@@ -50,6 +53,7 @@ def myapp(page: flt.Page):
         content=flt.Text("Imagine your brain has a tiny notebook to quickly remember things. But it can only hold a few notes at a time. When you learn something new, you need to forget something old to make space.\n\nThe cache replacement calculator helps decide which old note to erase. It considers two things:\n\t\t\t\t\t\t\t1)The new note's size: Is it short or long? A short note might fit on an existing page, while a long one might need its own page or even erase several notes!\n\t\t\t\t\t\t\t2)The notebook's page size: Does each page hold one note or many? Smaller pages mean more control over what to erase, but bigger pages are easier to manage (fewer decisions).\n\nThe calculator uses different strategies to remember things you need quickly:\nLRU (Least Recently Used):\n\t\t\t\t\t\t\t1) Evicts the element that hasn't been accessed for the longest time. \n\t\t\t\t\t\t 2)Good for frequently accessed data but can struggle with skewed access patterns. \n\t\t\t\t\t\t 3)Simple to implement and efficient for most workloads. \n\nFIFO (First-In-First-Out): \n\t\t\t\t\t\t 1)Evicts the element that arrived in the cache first, regardless of recent use. \n\t\t\t\t\t\t 2)Easy to understand and implement, but can be unfair to frequently accessed elements. \n\t\t\t\t\t\t 3)Not as adaptable as LRU to changing access patterns. \n\nMRU (Most Recently Used): \n\t\t\t\t\t\t 1)Evicts the element that was most recently accessed. \n\t\t\t\t\t\t 2)Not generally used in practice because it contradicts the goal of caching frequently accessed data. \n\t\t\t\t\t\t 3)Useful for special cases where recent data may be outdated. \n\nOptimal: \n\t\t\t\t\t\t 1)Always evicts the element that will be used furthest in the future, based on perfect knowledge of future access patterns. \n\t\t\t\t\t\t 2)Impossible to implement in real systems, but serves as a theoretical benchmark for other algorithms. \n\t\t\t\t\t\t 3)Helps evaluate the effectiveness of other algorithms. \n\nLFU (Least Frequently Used): \n\t\t\t\t\t\t 1)Evicts the element that has been accessed the least number of times overall. \n\t\t\t\t\t\t 2)Useful when access frequencies are uneven and some elements are rarely used. \n\t\t\t\t\t\t 3)Can perform well for certain workloads but may not be as effective as LRU for frequently accessed data."),
 
     )
+    dlg.actions
     def theme_changed(e):
         page.theme_mode = (
             flt.ThemeMode.DARK
@@ -79,27 +83,27 @@ def myapp(page: flt.Page):
     ],
         alignment=flt.MainAxisAlignment.SPACE_BETWEEN
     )
-    closer = flt.Row([
-        flt.Column([
-            flt.Row([
-                flt.Container(
-                    content=flt.ElevatedButton("-", on_click=lambda e: minim(), bgcolor="green", color="black"),
-                    padding=5, alignment=flt.alignment.top_right, ),
-                flt.Container(
-                    content=flt.ElevatedButton("■", on_click=lambda e: kecil(), bgcolor="yellow", color="black"),
-                    padding=5, alignment=flt.alignment.top_right, ),
-                flt.Container(
-                    content=flt.ElevatedButton("X", on_click=lambda e: keluar(), bgcolor="red", color="black"),
-                    padding=5, alignment=flt.alignment.top_right, ),
-
-            ])
-
-
-        ])
-
-    ],
-        alignment=flt.MainAxisAlignment.END
-    )
+    # closer = flt.Row([
+    #     flt.Column([
+    #         flt.Row([
+    #             flt.Container(
+    #                 content=flt.ElevatedButton("-", on_click=lambda e: minim(), bgcolor="green", color="black"),
+    #                 padding=5, alignment=flt.alignment.top_right, ),
+    #             flt.Container(
+    #                 content=flt.ElevatedButton("■", on_click=lambda e: kecil(), bgcolor="yellow", color="black"),
+    #                 padding=5, alignment=flt.alignment.top_right, ),
+    #             flt.Container(
+    #                 content=flt.ElevatedButton("X", on_click=lambda e: keluar(), bgcolor="red", color="black"),
+    #                 padding=5, alignment=flt.alignment.top_right, ),
+    #
+    #         ])
+    #
+    #
+    #     ])
+    #
+    # ],
+    #     alignment=flt.MainAxisAlignment.END
+    # )
 
     butang = flt.Row(
         [
@@ -144,18 +148,18 @@ def myapp(page: flt.Page):
         err.value=""
         printer.value=""
         page.update()
-    def kecil():
-        print(page.window_height)
-        page.window_height=400
-        print(page.window_height)
-        page.window_width=500
-        page.update()
-    def minim():
-        page.window.hide()
-        print(page.window_minimized)
-        page.update()
-    def keluar():
-        page.window_close()
+    # def kecil():
+    #     print(page.window_height)
+    #     page.window_height=400
+    #     print(page.window_height)
+    #     page.window_width=500
+    #     page.update()
+    # def minim():
+    #     page.window.hide()
+    #     print(page.window_minimized)
+    #     page.update()
+    # def keluar():
+    #     page.window_close()
     def open_dlg():
         page.dialog = dlg
         dlg.open = True
@@ -196,7 +200,7 @@ def LRU(data, cl, page, printer,cl1,labels):
     hit = len(data) - miss
     if (method == 6):
         return [hit / len(data), miss / len(data)]
-    printer.value = "Hit ratio = " + str(hit / len(data)) + "\t\t\t" + "Miss ratio = " + str(miss / len(data))
+    printer.value = "Hit ratio = " + str(round(hit / len(data),2)) + "\t\t\t" + "Miss ratio = " + str(round(miss / len(data),2))
 
     Maketbl(page, cl, cache1, data, printer,cl1,labels)
 
@@ -226,7 +230,7 @@ def FIFO(data, cl, page, printer,cl1,labels):
     hit = len(data) - miss
     if (method == 6):
         return [hit / len(data), miss / len(data)]
-    printer.value = "Hit ratio = " + str(hit / len(data)) + "\t\t\t" + "Miss ratio = " + str(miss / len(data))
+    printer.value = "Hit ratio = " + str(round(hit / len(data),2)) + "\t\t\t" + "Miss ratio = " + str(round(miss / len(data),2))
 
     Maketbl(page, cl, cache1, data, printer,cl1,labels)
 
@@ -256,7 +260,7 @@ def MRU(data, cl, page, printer,cl1,labels):
     hit = len(data) - miss
     if (method == 6):
         return [hit / len(data), miss / len(data)]
-    printer.value = "Hit ratio = " + str(hit / len(data)) + "\t\t\t" + "Miss ratio = " + str(miss / len(data))
+    printer.value = "Hit ratio = " + str(round(hit / len(data),2)) + "\t\t\t" + "Miss ratio = " + str(round(miss / len(data),2))
     Maketbl(page, cl, cache1, data, printer,cl1,labels)
 
 
@@ -293,10 +297,9 @@ def LFU(data, cl, page, printer,cl1,labels):
     hit = len(data) - miss
     if (method == 6):
         return [hit / len(data), miss / len(data)]
-    printer.value = "Hit ratio = " + str(hit / len(data)) + "\t\t\t" + "Miss ratio = " + str(miss / len(data))
+    printer.value = "Hit ratio = " + str(round(hit / len(data),2)) + "\t\t\t" + "Miss ratio = " + str(round(miss / len(data),2))
 
     Maketbl(page, cl, cache1, data, printer,cl1,labels)
-
 
 def OPTIMAL(data, cl, page, printer,cl1,labels):
     global method
@@ -342,7 +345,8 @@ def OPTIMAL(data, cl, page, printer,cl1,labels):
     hit = len(data) - miss
     if (method == 6):
         return [hit / len(data), miss / len(data)]
-    printer.value = "Hit ratio = " + str(hit / len(data)) + "\t\t\t" + "Miss ratio = " + str(miss / len(data))
+    print(round(hit / len(data),2))
+    printer.value = "Hit ratio = " + str(round(hit / len(data),2)) + "\t\t\t" + "Miss ratio = " + str(round(miss / len(data),2))
 
     Maketbl(page, cl, cache1, data, printer,cl1,labels)
 
@@ -396,7 +400,7 @@ def button_clicked(e, method1, data1, cl1, page, labels, printer,err):
     else:
         method = int(method1.value)
         err.value = ""
-        if (cl1.value==""):
+        if (cl1.value=="" or int(cl1.value)>=10):
             err.value = "Insert a valid cache line"
         else:
             cl = int(cl1.value)
@@ -952,7 +956,6 @@ def Maketbl(page, cl, cache1, data, printer,cl1,labels):
 
         ],
     )
-
     scr.controls.append(dt)
     if(clr==0):
         info(page, cl, cache1, data, printer,cl1,checker,checker1,labels)
@@ -977,6 +980,7 @@ def info(page, cl, cache1, data, printer,cl1,checker,checker1,labels):
     if (rounder > 0):
         ot.visible = False
         page.remove(printer)
+        print(dt)
         ot = dt
     else:
         ot = dt
