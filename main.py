@@ -4,7 +4,6 @@ clr=0
 method = 0
 def myapp(page: flt.Page):
     page.theme_mode = flt.ThemeMode.LIGHT
-    page.scroll="always"
     page.window_left = 0
     page.window_top = 0
     page.window_height=GetSystemMetrics(1)-30
@@ -956,7 +955,8 @@ def Maketbl(page, cl, cache1, data, printer,cl1,labels):
 
         ],
     )
-    scr.controls.append(dt)
+
+    #scr.controls.append(dt)
     if(clr==0):
         info(page, cl, cache1, data, printer,cl1,checker,checker1,labels)
     elif(clr==1):
@@ -976,14 +976,16 @@ def info(page, cl, cache1, data, printer,cl1,checker,checker1,labels):
             dt.rows[i].visible = False
         else:
             dt.rows[i].visible = True
-
+    cv = flt.Column([dt],scroll=True)
+    rv = flt.Row([cv],scroll=True,expand=1)
+    page.add(rv)
     if (rounder > 0):
         ot.visible = False
         page.remove(printer)
         print(dt)
-        ot = dt
+        ot = rv
     else:
-        ot = dt
+        ot = rv
     if(cl1.value.isnumeric()):
         rounder = rounder + 1
         page.add(printer)
