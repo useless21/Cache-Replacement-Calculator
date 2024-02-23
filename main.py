@@ -1,15 +1,11 @@
 import flet as flt
-from win32api import GetSystemMetrics
 clr=0
 method = 0
 
 def myapp(page: flt.Page):
     page.theme_mode = flt.ThemeMode.LIGHT
     page.scroll="always"
-    page.window_left = 0
-    page.window_top = 0
-    page.window_height=GetSystemMetrics(1)-30
-    page.window_width = GetSystemMetrics(0)+30
+    page.window_fullscreen=True
     global method,method1,data1,cl1
     method1 = flt.RadioGroup(content=flt.Column([
         flt.Radio(value=1, label='LRU (Least Recently Used)'),
