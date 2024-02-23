@@ -4,6 +4,7 @@ method = 0
 def myapp(page: flt.Page):
     page.theme_mode = flt.ThemeMode.LIGHT
     page.window_full_screen=True
+    page.scroll="always"
     global method,method1,data1,cl1
     method1 = flt.RadioGroup(content=flt.Column([
         flt.Radio(value=1, label='LRU (Least Recently Used)'),
@@ -972,7 +973,7 @@ def info(page, cl, cache1, data, printer,cl1,checker,checker1,labels):
             dt.rows[i].visible = False
         else:
             dt.rows[i].visible = True
-    cv = flt.Column([dt],scroll=True)
+    cv = flt.Column([dt])
     rv = flt.Row([cv],scroll=True,expand=1,vertical_alignment=flt.CrossAxisAlignment.START)
     page.add(rv)
     if (rounder > 0):
