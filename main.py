@@ -981,7 +981,7 @@ def info(page, cl, cache1, data, printer,cl1,checker,checker1,labels):
             dt.rows[i].visible = False
         else:
             dt.rows[i].visible = True
-    cv = flt.Column([dt],scroll=True)
+    cv = flt.Column([dt])
     rv = flt.Row([cv],scroll=True,expand=1,vertical_alignment=flt.CrossAxisAlignment.START)
     page.add(rv)
     if (rounder > 0):
