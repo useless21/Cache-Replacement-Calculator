@@ -141,6 +141,7 @@ def myapp(page: flt.Page):
         labels.value = ""
         method1.value=None
         clr=1
+        err.value=""
         printer.value=""
         page.update()
     def kecil():
