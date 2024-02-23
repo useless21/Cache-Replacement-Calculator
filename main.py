@@ -49,7 +49,6 @@ def myapp(page: flt.Page):
         content=flt.Text("Imagine your brain has a tiny notebook to quickly remember things. But it can only hold a few notes at a time. When you learn something new, you need to forget something old to make space.\n\nThe cache replacement calculator helps decide which old note to erase. It considers two things:\n\t\t\t\t\t\t\t1)The new note's size: Is it short or long? A short note might fit on an existing page, while a long one might need its own page or even erase several notes!\n\t\t\t\t\t\t\t2)The notebook's page size: Does each page hold one note or many? Smaller pages mean more control over what to erase, but bigger pages are easier to manage (fewer decisions).\n\nThe calculator uses different strategies to remember things you need quickly:\nLRU (Least Recently Used):\n\t\t\t\t\t\t\t1) Evicts the element that hasn't been accessed for the longest time. \n\t\t\t\t\t\t 2)Good for frequently accessed data but can struggle with skewed access patterns. \n\t\t\t\t\t\t 3)Simple to implement and efficient for most workloads. \n\nFIFO (First-In-First-Out): \n\t\t\t\t\t\t 1)Evicts the element that arrived in the cache first, regardless of recent use. \n\t\t\t\t\t\t 2)Easy to understand and implement, but can be unfair to frequently accessed elements. \n\t\t\t\t\t\t 3)Not as adaptable as LRU to changing access patterns. \n\nMRU (Most Recently Used): \n\t\t\t\t\t\t 1)Evicts the element that was most recently accessed. \n\t\t\t\t\t\t 2)Not generally used in practice because it contradicts the goal of caching frequently accessed data. \n\t\t\t\t\t\t 3)Useful for special cases where recent data may be outdated. \n\nOptimal: \n\t\t\t\t\t\t 1)Always evicts the element that will be used furthest in the future, based on perfect knowledge of future access patterns. \n\t\t\t\t\t\t 2)Impossible to implement in real systems, but serves as a theoretical benchmark for other algorithms. \n\t\t\t\t\t\t 3)Helps evaluate the effectiveness of other algorithms. \n\nLFU (Least Frequently Used): \n\t\t\t\t\t\t 1)Evicts the element that has been accessed the least number of times overall. \n\t\t\t\t\t\t 2)Useful when access frequencies are uneven and some elements are rarely used. \n\t\t\t\t\t\t 3)Can perform well for certain workloads but may not be as effective as LRU for frequently accessed data."),
 
     )
-    dlg.actions
     def theme_changed(e):
         page.theme_mode = (
             flt.ThemeMode.DARK
@@ -116,11 +115,11 @@ def myapp(page: flt.Page):
     )
 
     global scr
-    scr= flt.Column(scroll="always")
+    scr= flt.Column()
     scr.controls.append(data1)
     scr.controls.append(cl1)
     scr.controls.append(method1)
-    scr.controls.append(err)
+    #scr.controls.append(err)
     scr.controls.append(butang)
     scr.controls.append(labels)
     page.add(help,scr)
@@ -368,18 +367,23 @@ def bestmeth(data, cl, page, labels, printer,cl1):
     num = hit_total.index(max(hit_total))
     method = num + 1
     if (method == 1):
+        labels.color="black"
         labels.value = 'LRU (Least Recently Used)'
         LRU(data, cl, page, printer,cl1,labels)
     elif (method == 2):
+        labels.color = "black"
         labels.value = 'FIFO (First in First )'
         FIFO(data, cl, page, printer,cl1,labels)
     elif (method == 3):
+        labels.color = "black"
         labels.value = 'MRU (Most Recently Used)'
         MRU(data, cl, page, printer,cl1,labels)
     elif (method == 4):
+        labels.color = "black"
         labels.value = 'Optimal Replacement'
         OPTIMAL(data, cl, page, printer,cl1,labels)
     elif (method == 5):
+        labels.color = "black"
         labels.value = 'Least Frequently Used'
         LFU(data, cl, page, printer,cl1,labels)
 
@@ -392,20 +396,23 @@ def button_clicked(e, method1, data1, cl1, page, labels, printer,err):
     labels.value = ""
     if (method1.value==None):
         method=0
-        err.value = "Select a method"
+        labels.value = "Select a method"
+        labels.color="red"
     else:
         method = int(method1.value)
-        err.value = ""
+        labels.value = ""
         if (cl1.value=="" or int(cl1.value)>=10):
-            err.value = "Insert a valid cache line"
+            labels.value = "Insert a valid cache line"
+            labels.color = "red"
         else:
             cl = int(cl1.value)
-            err.value = ""
+            labels.value = ""
             if (data1.value == ""):
-                err.value = "Insert a valid data elements"
+                labels.value = "Insert a valid data elements"
+                labels.color = "red"
             else:
                 data = list(map(int, data1.value.split()))
-                err.value = ""
+                labels.value = ""
 
                 if (method == 1):
                     LRU(data, cl, page, printer,cl1,labels)
@@ -957,6 +964,7 @@ def Maketbl(page, cl, cache1, data, printer,cl1,labels):
     if(clr==0):
         info(page, cl, cache1, data, printer,cl1,checker,checker1,labels)
     elif(clr==1):
+        labels.color="black"
         labels.value="Memory cleared"
 
 def info(page, cl, cache1, data, printer,cl1,checker,checker1,labels):
@@ -973,7 +981,7 @@ def info(page, cl, cache1, data, printer,cl1,checker,checker1,labels):
             dt.rows[i].visible = False
         else:
             dt.rows[i].visible = True
-    cv = flt.Column([dt])
+    cv = flt.Column([dt],scroll=True)
     rv = flt.Row([cv],scroll=True,expand=1,vertical_alignment=flt.CrossAxisAlignment.START)
     page.add(rv)
     if (rounder > 0):
