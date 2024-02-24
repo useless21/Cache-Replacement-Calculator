@@ -1,9 +1,13 @@
 import flet as flt
+from win32api import GetSystemMetrics
 clr=0
 method = 0
 def myapp(page: flt.Page):
     page.theme_mode = flt.ThemeMode.LIGHT
-    page.scroll="always"
+    page.window_left = 0
+    page.window_top = 0
+    page.window_height=GetSystemMetrics(1)-30
+    page.window_width = GetSystemMetrics(0)+30
     global method,method1,data1,cl1
     method1 = flt.RadioGroup(content=flt.Column([
         flt.Radio(value=1, label='LRU (Least Recently Used)'),
@@ -19,12 +23,14 @@ def myapp(page: flt.Page):
         hint_text="12 14 15 18 24...",
         input_filter=flt.InputFilter(allow=True, regex_string=r"[0-9 ]", replacement_string=""),
         helper_text="Element to be entered into cache",
+        tooltip="Enter integers separated by spaces"
     )
     cl1 = flt.TextField(
         label="Cache Line",
         value="",
         input_filter=flt.NumbersOnlyInputFilter(),
         helper_text = "Enter an integer less than 10 to determine number of cache line",
+        tooltip="Enter a single integer for cache line number"
     )
 
     labels = flt.TextField(
@@ -43,11 +49,17 @@ def myapp(page: flt.Page):
         border=flt.InputBorder.NONE,
         color="red"
     )
+    alr=flt.DataTable(
+        heading_row_height=page.window_height-290,
+        columns=[flt.DataColumn(flt.Text("Imagine your brain has a tiny notebook to quickly remember things. But it can only hold a few notes at a time. When you learn something new, you need to forget something old to make space.\n\nThe cache replacement calculator helps decide which old note to erase. It considers two things:\n\t\t\t\t\t\t\t1)The new note's size: Is it short or long? A short note might fit on an existing page, while a long one might need its own page or even erase several notes!\n\t\t\t\t\t\t\t2)The notebook's page size: Does each page hold one note or many? Smaller pages mean more control over what to erase, but bigger pages are easier to manage (fewer decisions).\n\nThe calculator uses different strategies to remember things you need quickly:\n\nLRU (Least Recently Used):\n\n\t\t\t\t\t\t\t1) Evicts the element that hasn't been accessed for the longest time. \n\t\t\t\t\t\t 2)Good for frequently accessed data but can struggle with skewed access patterns. \n\t\t\t\t\t\t 3)Simple to implement and efficient for most workloads. \n\nFIFO (First-In-First-Out): \n\n\t\t\t\t\t\t 1)Evicts the element that arrived in the cache first, regardless of recent use. \n\t\t\t\t\t\t 2)Easy to understand and implement, but can be unfair to frequently accessed elements. \n\t\t\t\t\t\t 3)Not as adaptable as LRU to changing access patterns. \n\nMRU (Most Recently Used): \n\n\t\t\t\t\t\t 1)Evicts the element that was most recently accessed. \n\t\t\t\t\t\t 2)Not generally used in practice because it contradicts the goal of caching frequently accessed data. \n\t\t\t\t\t\t 3)Useful for special cases where recent data may be outdated. \n\nOptimal: \n\n\t\t\t\t\t\t 1)Always evicts the element that will be used furthest in the future, based on perfect knowledge of future access patterns. \n\t\t\t\t\t\t 2)Impossible to implement in real systems, but serves as a theoretical benchmark for other algorithms. \n\t\t\t\t\t\t 3)Helps evaluate the effectiveness of other algorithms. \n\nLFU (Least Frequently Used): \n\n\t\t\t\t\t\t 1)Evicts the element that has been accessed the least number of times overall. \n\t\t\t\t\t\t 2)Useful when access frequencies are uneven and some elements are rarely used. \n\t\t\t\t\t\t 3)Can perform well for certain workloads but may not be as effective as LRU for frequently accessed data."
+                                         ))],
+    )
     dlg = flt.AlertDialog(
         title=flt.Text("Welcome to our Cache Replacement Calculator"),
-        content=flt.Text("Imagine your brain has a tiny notebook to quickly remember things. But it can only hold a few notes at a time. When you learn something new, you need to forget something old to make space.\n\nThe cache replacement calculator helps decide which old note to erase. It considers two things:\n\t\t\t\t\t\t\t1)The new note's size: Is it short or long? A short note might fit on an existing page, while a long one might need its own page or even erase several notes!\n\t\t\t\t\t\t\t2)The notebook's page size: Does each page hold one note or many? Smaller pages mean more control over what to erase, but bigger pages are easier to manage (fewer decisions).\n\nThe calculator uses different strategies to remember things you need quickly:\nLRU (Least Recently Used):\n\t\t\t\t\t\t\t1) Evicts the element that hasn't been accessed for the longest time. \n\t\t\t\t\t\t 2)Good for frequently accessed data but can struggle with skewed access patterns. \n\t\t\t\t\t\t 3)Simple to implement and efficient for most workloads. \n\nFIFO (First-In-First-Out): \n\t\t\t\t\t\t 1)Evicts the element that arrived in the cache first, regardless of recent use. \n\t\t\t\t\t\t 2)Easy to understand and implement, but can be unfair to frequently accessed elements. \n\t\t\t\t\t\t 3)Not as adaptable as LRU to changing access patterns. \n\nMRU (Most Recently Used): \n\t\t\t\t\t\t 1)Evicts the element that was most recently accessed. \n\t\t\t\t\t\t 2)Not generally used in practice because it contradicts the goal of caching frequently accessed data. \n\t\t\t\t\t\t 3)Useful for special cases where recent data may be outdated. \n\nOptimal: \n\t\t\t\t\t\t 1)Always evicts the element that will be used furthest in the future, based on perfect knowledge of future access patterns. \n\t\t\t\t\t\t 2)Impossible to implement in real systems, but serves as a theoretical benchmark for other algorithms. \n\t\t\t\t\t\t 3)Helps evaluate the effectiveness of other algorithms. \n\nLFU (Least Frequently Used): \n\t\t\t\t\t\t 1)Evicts the element that has been accessed the least number of times overall. \n\t\t\t\t\t\t 2)Useful when access frequencies are uneven and some elements are rarely used. \n\t\t\t\t\t\t 3)Can perform well for certain workloads but may not be as effective as LRU for frequently accessed data."),
+        content=flt.Column([alr],scroll=True),
 
     )
+    page.update()
     def theme_changed(e):
         page.theme_mode = (
             flt.ThemeMode.DARK
@@ -439,7 +451,7 @@ def Maketbl(page, cl, cache1, data, printer,cl1,labels):
     checker1 = [0] * 10
     x = [flt.DataColumn(flt.Text("-1"))] * 100
     for i in range(len(data)):
-        x[i] = flt.DataColumn(flt.Text(str(i + 1)))
+        x[i] = flt.DataColumn(flt.Text(str(i + 1)),tooltip="Data in cache at cycle "+str(i+1))
         checker[i] = 1
     for i in range(cl):
         checker1[i] = 1
@@ -980,11 +992,12 @@ def info(page, cl, cache1, data, printer,cl1,checker,checker1,labels):
             dt.rows[i].visible = False
         else:
             dt.rows[i].visible = True
-    cv = flt.Column([dt])
+    cv = flt.Column([dt],scroll=True)
     rv = flt.Row([cv],scroll=True,expand=1,vertical_alignment=flt.CrossAxisAlignment.START)
     page.add(rv)
     if (rounder > 0):
-        ot.visible = False
+        #ot.visible = False
+        page.remove(ot)
         page.remove(printer)
         print(dt)
         ot = rv
