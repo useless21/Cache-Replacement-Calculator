@@ -400,7 +400,7 @@ def Maketbl(page, cl, cache1, data, printer, cl1, labels, hit, miss):
             lstrow.append(flt.DataCell(flt.Text(str(cache1[j][i]))))
         baris.append(flt.DataRow(lstrow))
         lstrow = []
-    dt = flt.DataTable(heading_row_color=flt.colors.AMBER_50,columns=col, rows=baris)
+    dt = flt.DataTable(heading_text_style=flt.TextStyle(weight=flt.FontWeight.BOLD),heading_row_color=flt.colors.AMBER_50,columns=col, rows=baris)
     cv = flt.Column([dt], scroll=True)
     rv = flt.Row([cv],scroll=flt.ScrollMode.ADAPTIVE, expand=1, vertical_alignment=flt.CrossAxisAlignment.START)
     page.add(rv)
